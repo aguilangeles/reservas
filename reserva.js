@@ -18,10 +18,11 @@ El objetivo es que no tomen dos personas el mismo hora.
          * @returns {{hour: *, isReserved: *}}
          * @constructor
          */
-        function Turno(hour, isReserved){
+        function Turno(hour, isReserved, name){
             return {
                 hour: hour,
-                isReserved: isReserved
+                isReserved: isReserved,
+                name:name
 
             };
         }
@@ -30,46 +31,63 @@ El objetivo es que no tomen dos personas el mismo hora.
         var turnos = [];
 
 
-        for(var i = 0; i<24;i++ ){
-            turnos.push(new Turno(i, false));
+        for(var i = 9; i<24;i++ ){
+            turnos.push(new Turno(i, false,' '));
         };
 
 
         var toggleTurno = function(){
+
             var $this       = $(this);
             var idTurnoRes  = 'turnoReservado'+$this.data('hour');
+            var idname  = 'name'+$this.data('name');
             var isReserved  =  $this.data('isReserved');
 
-            $this.toggleClass('btn-danger btn-default');
+
 
             if(isReserved){
-                //var remove =  $('#'+idTurnoRes).remove();
-                var disabled = $('#'+idTurnoRes).removeClass('disabled');
-                //console.log(remove)
+                var name        =  $this.data('name', '');
+
+                var attr = $('.label.label-info').remove();
+                $('#'+idTurnoRes).removeClass('disabled');
 
             }else{
+                var name        =  $this.data('name', 'punkito');
                 var disabled = $('#'+idTurnoRes).addClass('disabled');
-               // var linea = $('<li id="'+idTurnoRes+'" class="list-group-item">'+$this.data('hour')+'</li>')
 
-                //$('#planilla').append(linea);
+                var label = $('<span id="'+idname+'" class="label label-info">'+$this.data('name')+'</span>');
+
+                disabled.append(label);
+
             }
+            $this.toggleClass('btn-info btn-default');
 
             $this.data('isReserved', !isReserved);
 
         }
+        var preguntarNombre = function (isreserved) {
+            var band = prompt("Ingrese el nombre de la banda", "");
+            if (band != null) {
+
+
+            }
+        };
 
         for(hora in turnos){
 
             var turno   = turnos[hora];
             var id      = 'id'+turno.hour;
-            var item    = $('<li class="btn btn-default" id="'+id + '" data-hour="'+turno.hour+'" data-is-reserved="'+turno.isReserved+'">'+turnos[hora].hour+':00'+'</li>');
+            var name    = turno.name;
+
+            var item    = $('<li class="btn btn-default" id="'+id + '" data-hour="'+turno.hour+'" data-is-reserved="'+turno.isReserved +'" data-name="'+turno.name+'">'+turnos[hora].hour+':00'+'</li>');
 
             $('#horario').append(item);
 
 
             var idTurnoRes  = 'turnoReservado'+item.data('hour');
 
-            var linea = $('<li id="'+idTurnoRes+'" class="list-group-item">'+item.data('hour')+'</li>')
+            var linea = $('<li id="'+idTurnoRes+'" class="list-group-item">'+item.data('hour')+'</li>');
+
             $('#planilla').append(linea);
 
             $('#'+id).on('click', toggleTurno);
