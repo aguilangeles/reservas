@@ -35,43 +35,61 @@ El objetivo es que no tomen dos personas el mismo hora.
             turnos.push(new Turno(i, false,' '));
         };
 
+        var toggleTurno = function (){
 
-        var toggleTurno = function(){
-
-            var $this       = $(this);
+            var $this = $(this);
             var idTurnoRes  = 'turnoReservado'+$this.data('hour');
             var idname  = 'name'+$this.data('name');
             var isReserved  =  $this.data('isReserved');
 
 
+            switch($this.attr('class')){
+                case "btn btn-sm btn-info":
+                    cancelarTurno($this, idname, idTurnoRes);
 
-            if(isReserved){
-                var name        =  $this.data('name', '');
+                    break
 
-                var attr = $('.label.label-info').remove();
-                $('#'+idTurnoRes).removeClass('disabled');
+                case "btn btn-sm btn-default":
 
-            }else{
-                var name        =  $this.data('name', 'punkito');
+                    reservarTurno($this, idname, idTurnoRes);
+
+                break;
+            }
+        }
+
+        var reservarTurno = function($this, idname, idTurnoRes){
+
+            var band = prompt("Ingrese el nombre de la banda");
+
+            if (band != '') {
+
+                var name        =  $this.data('name', band);
+
                 var disabled = $('#'+idTurnoRes).addClass('disabled');
 
                 var label = $('<span id="'+idname+'" class="label label-info">'+$this.data('name')+'</span>');
 
                 disabled.append(label);
+                isReserved=true;
+                $this.toggleClass('btn-info btn-default');
 
+            }else{
+
+                alert('por favor, ingrese un nombre')
             }
-            $this.toggleClass('btn-info btn-default');
-
-            $this.data('isReserved', !isReserved);
 
         }
-        var preguntarNombre = function (isreserved) {
-            var band = prompt("Ingrese el nombre de la banda", "");
-            if (band != null) {
+
+        var cancelarTurno = function($this, idname, idTurnoRes){
+
+            var name        =  $this.data('name', '');
+            var attr = $('.label.label-info').remove();
+            $('#'+idTurnoRes).removeClass('disabled');
+            isReserved=false;
+            $this.toggleClass('btn-default btn-info');
+        }
 
 
-            }
-        };
 
         for(hora in turnos){
 
@@ -79,7 +97,7 @@ El objetivo es que no tomen dos personas el mismo hora.
             var id      = 'id'+turno.hour;
             var name    = turno.name;
 
-            var item    = $('<li class="btn btn-default" id="'+id + '" data-hour="'+turno.hour+'" data-is-reserved="'+turno.isReserved +'" data-name="'+turno.name+'">'+turnos[hora].hour+':00'+'</li>');
+            var item    = $('<li class="btn btn-sm btn-default" id="'+id + '" data-hour="'+turno.hour+'" data-is-reserved="'+turno.isReserved +'" data-name="'+turno.name+'">'+turnos[hora].hour+':00'+'</li>');
 
             $('#horario').append(item);
 
